@@ -34,8 +34,7 @@ export const AdSchema = new Schema({
     required: "Enter Phone Number"
   },
   file: {
-    type: String,
-    required: "Select Image"
+    type: String
   },
   created_date: {
     type: Date,

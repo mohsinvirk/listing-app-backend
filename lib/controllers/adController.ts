@@ -1,12 +1,16 @@
 import * as mongoose from "mongoose";
 import { AdSchema } from "../models/adModel";
+import { ImageSchema } from "../models/imgModel";
 import { Request, Response } from "express";
+import { error } from "util";
 
 const Ad = mongoose.model("Ad", AdSchema);
+const ImageModal = mongoose.model("Image", ImageSchema);
 
 export class adController {
   public addNewAd(req: Request, res: Response) {
     let body = req.body;
+    let file = req.body.file;
     let newAd = new Ad({
       title: body.title,
       category: body.category,
@@ -16,15 +20,35 @@ export class adController {
       name: body.name,
       email: body.email,
       phone: body.phone,
-      file: req.files
+      file
     });
 
-    newAd.save((err, ad) => {
-      if (err) {
-        res.send(err);
-      }
-      res.json({ ad, file: newAd.file });
-    });
+    newAd
+      .save()
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  }
+  /**
+   * addNewImage
+   */
+  public addNewImage(req: Request, res: Response) {
+    let file = req.file.path;
+    console.log(file);
+
+    // let newImage = new ImageModal({ file });
+
+    // newImage
+    //   .save()
+    //   .then(result => {
+    //     res.json(result);
+    //   })
+    //   .catch(err => {
+    //     res.json(error);
+    //   });
   }
 
   public getAds(req: Request, res: Response) {

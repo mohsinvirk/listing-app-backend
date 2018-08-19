@@ -27,22 +27,36 @@ export class Routes {
     });
 
     // Ad
+
     app
       .route("/ads")
       .get((req: Request, res: Response, next: NextFunction) => {
         // middleware
+
         console.log(`Request from: ${req.originalUrl}`);
         console.log(`Request type: ${req.method}`);
         next();
       }, this.adController.getAds)
 
       // POST endpoint
+
       .post(upload.single("file"), this.adController.addNewAd);
 
+    // Image endpoint
+
+    app
+      .route("/ads/images")
+      .post(upload.single("file"), this.adController.addNewImage)
+      .get((req: Request, res: Response) => {
+        res.send({ message: "Imaes route is Working" });
+      });
+
     // Ad detail
+
     app
       .route("/ads/:adId")
       // get specific Ad
+
       .get(this.adController.getAdWithID)
       .put(this.adController.updateAd)
       .delete(this.adController.deleteAd);
