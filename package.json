@@ -2,7 +2,7 @@
   "name": "apis-project",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/server.js",
+  "main": "server.js",
   "scripts": {
     "build": "tsc",
     "dev": "ts-node ./lib/server.ts",
