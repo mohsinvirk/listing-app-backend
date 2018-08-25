@@ -13,18 +13,24 @@ export const AdSchema = new Schema({
     required: "Select a category"
   },
   description: {
-    type: String
+    type: String,
+    required: "Enter Description"
   },
   price: {
     type: Number,
     required: "Enter price"
   },
   address: {
-    type: String
+    type: String,
+    required: true
   },
   name: {
     type: String,
     required: "Enter Name"
+  },
+  city: {
+    type: String,
+    required: "Enter city"
   },
   email: {
     type: String
@@ -32,6 +38,9 @@ export const AdSchema = new Schema({
   phone: {
     type: Number,
     required: "Enter Phone Number"
+  },
+  favorite: {
+    type: Boolean
   },
   file: {
     type: String

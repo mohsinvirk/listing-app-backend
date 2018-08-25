@@ -10,16 +10,17 @@ const ImageModal = mongoose.model("Image", ImageSchema);
 export class adController {
   public addNewAd(req: Request, res: Response) {
     let body = req.body;
-    let file = req.body.file;
+    let file = req.file.path;
     let newAd = new Ad({
       title: body.title,
       category: body.category,
-      description: body.descripnption,
+      description: body.description,
       price: body.price,
-      address: body.Addresname,
+      address: body.address,
       name: body.name,
       email: body.email,
       phone: body.phone,
+      city: body.city,
       file
     });
 
@@ -39,16 +40,16 @@ export class adController {
     let file = req.file.path;
     console.log(file);
 
-    // let newImage = new ImageModal({ file });
+    let newImage = new ImageModal({ file });
 
-    // newImage
-    //   .save()
-    //   .then(result => {
-    //     res.json(result);
-    //   })
-    //   .catch(err => {
-    //     res.json(error);
-    //   });
+    newImage
+      .save()
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {
+        res.json(error);
+      });
   }
 
   public getAds(req: Request, res: Response) {

@@ -33,7 +33,11 @@ export class userController {
             newUser.password = hash;
             newUser
               .save()
-              .then(user => res.json(user))
+              .then(user =>
+                res.json({
+                  email: user.email
+                })
+              )
               .catch(err => console.log(err));
           });
         });
@@ -47,7 +51,7 @@ export class userController {
     User.findOne({ email }).then(user => {
       // If User exists
       if (!user) {
-        return res.status(404).json({ email: "user not found" });
+        return res.json({ email: "user not found" });
       }
       // Compare the hashed user.password with password
       bcrypt.compare(password, user.password).then(isMatch => {
@@ -73,7 +77,7 @@ export class userController {
             }
           );
         } else {
-          return res.status(404).json({ erro: "Not found" });
+          return res.status(404).json({ error: "Not found" });
         }
       });
     });

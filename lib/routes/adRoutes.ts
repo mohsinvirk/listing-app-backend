@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { adController } from "../controllers/adController";
 import * as multer from "multer";
 
+const path = require("path");
+
 // multer configuration
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -46,9 +48,11 @@ export class Routes {
 
     app
       .route("/ads/images")
-      .post(upload.single("file"), this.adController.addNewImage)
+      .post(this.adController.addNewImage)
       .get((req: Request, res: Response) => {
-        res.send({ message: "Imaes route is Working" });
+        res.send({
+          message: "API is Working "
+        });
       });
 
     // Ad detail
