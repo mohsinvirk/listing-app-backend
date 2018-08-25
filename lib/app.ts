@@ -50,7 +50,7 @@ class App {
   private mongoSetup(): void {
     mongoose.Promise = global.Promise;
     mongoose
-      .connect(this.mongoUrl)
+      .connect(process.env.MONGODB_URI || this.mongoUrl)
       .then(result => {
         console.log(result);
       })
