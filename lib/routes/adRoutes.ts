@@ -67,12 +67,13 @@ export class Routes {
       .put(this.adController.updateAd)
       .delete(this.adController.deleteAd);
 
-    app.route("/messages")
-    .post(this.messageController.addNewMessage)
-    .get((req: Request, res: Response) => {
-      res.send({
-        message: "API is Working "
+    app
+      .route("/messages/send")
+      .post(this.messageController.addNewMessage)
+      .get((req: Request, res: Response) => {
+        res.send({
+          message: "API is Working "
+        });
       });
-    });
   }
 }
