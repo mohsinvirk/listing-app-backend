@@ -68,7 +68,7 @@ export class Routes {
       .delete(this.adController.deleteAd);
 
     app
-      .route("/chat/send")
+      .route("/ads/send")
       .post(this.messageController.addNewMessage)
       .get((req: Request, res: Response) => {
         res.send({
