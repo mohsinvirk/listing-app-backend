@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { adController } from "../controllers/adController";
+import { messageController } from "../controllers/messageController";
 import * as multer from "multer";
 
 const path = require("path");
@@ -20,6 +21,7 @@ var upload = multer({
 
 export class Routes {
   public adController: adController = new adController();
+  public messageController: messageController = new messageController();
 
   public routes(app): void {
     app.route("/").get((req: Request, res: Response) => {
@@ -64,5 +66,7 @@ export class Routes {
       .get(this.adController.getAdWithID)
       .put(this.adController.updateAd)
       .delete(this.adController.deleteAd);
+
+    app.route("/messages").post(this.messageController.addNewMessage);
   }
 }
