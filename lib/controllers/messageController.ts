@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import { messageSchema } from "../models/messageModel";
+import { UserSchema } from "../models/userModel";
 import { Request, Response } from "express";
 import * as FCM from "fcm-node";
 let serverKey =
@@ -7,6 +8,7 @@ let serverKey =
 // import { error } from "util";
 
 const Message = mongoose.model("Message", messageSchema);
+const User = mongoose.model("User", UserSchema);
 
 export class messageController {
   /**
@@ -14,89 +16,48 @@ export class messageController {
    */
   public addNewMessage(req: Request, res: Response) {
     let body = req.body;
-    let newMessage = new Message({
-      senderName: body.senderName,
-      senderEmail: body.senderEmail,
-      senderMessage: body.senderMessage
-    });
-    var fcm = new FCM(serverKey);
-    let token = body.token;
-    let message = {
-      //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-      to: `${token}`,
-      collapse_key: "your_collapse_key",
+    User.findOne({ email: req.body.adAuthor }, (user, err) => {
+      if (err) res.json(err);
+      var fcm = new FCM(serverKey);
+      let token = user.fcmtoken;
+      let message = {
+        //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+        to: `${token}`,
+        collapse_key: "your_collapse_key",
 
-      notification: {
-        title: `Hi ${body.senderName}`,
-        body: "You Have A New Message"
-      },
+        notification: {
+          title: `Hi ${body.senderName}`,
+          body: body.senderMessage
+        },
 
-      data: {
-        //you can send only notification or only data(or include both)
-        my_key: "my value",
-        my_another_key: "my another value"
-      }
-    };
-    fcm.send(message, function(err, response) {
-      if (err) {
-        console.log(err);
-        console.log("Something has gone wrong!");
-      } else {
-        console.log("Successfully sent with response: ", response);
-      }
-    });
-
-    newMessage
-      .save()
-      .then(result => {
-        res.json(result);
-      })
-      .catch(err => {
-        res.json(err);
+        data: {
+          //you can send only notification or only data(or include both)
+          my_key: "my value",
+          my_another_key: "my another value"
+        }
+      };
+      fcm.send(message, function(err, response) {
+        if (err) {
+          console.log(err);
+          console.log("Something has gone wrong!");
+        } else {
+          console.log("Successfully sent with response: ", response);
+        }
       });
+
+      let newMessage = new Message({
+        senderName: body.senderName,
+        senderEmail: body.senderEmail,
+        senderMessage: body.senderMessage
+      });
+      newMessage
+        .save()
+        .then(result => {
+          res.json(result);
+        })
+        .catch(err => {
+          res.json(err);
+        });
+    });
   }
-  /**
-   * addNewImage
-   */
-
-  // public getAds(req: Request, res: Response) {
-  //   Ad.find({}, (err, ad) => {
-  //     if (err) {
-  //       res.send(err);
-  //     }
-  //     res.json(ad);
-  //   });
-  // }
-
-  // public getAdWithID(req: Request, res: Response) {
-  //   Ad.findById(req.params.adId, (err, ad) => {
-  //     if (err) {
-  //       res.send(err);
-  //     }
-  //     res.json(ad);
-  //   });
-  // }
-
-  // public updateAd(req: Request, res: Response) {
-  //   Ad.findOneAndUpdate(
-  //     { _id: req.params.adId },
-  //     req.body,
-  //     { new: true },
-  //     (err, ad) => {
-  //       if (err) {
-  //         res.send(err);
-  //       }
-  //       res.json(ad);
-  //     }
-  //   );
-  // }
-
-  // public deleteAd(req: Request, res: Response) {
-  //   Ad.remove({ _id: req.params.adId }, (err, ad) => {
-  //     if (err) {
-  //       res.send(err);
-  //     }
-  //     res.json({ message: "Successfully deleted Ad!", ad });
-  //   });
-  // }
 }

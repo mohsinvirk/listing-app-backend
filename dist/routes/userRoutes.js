@@ -24,14 +24,15 @@ class UserRoutes {
                 avatar: req.user.avatar
             });
         });
-        // POST endpoint
-        // Ad detail
-        // app
-        //   .route("/ads/:adId")
-        //   // get specific Ad
-        //   .get(this.userController.getAdWithID)
-        //   .put(this.userController.updateAd)
-        //   .delete(this.userController.deleteAd);
+        // POST endpoint of token
+        app
+            .route("/settoken")
+            .post(this.userController.setToken)
+            .get((req, res) => {
+            res.status(200).send({
+                message: "GET request successfulll!!!!"
+            });
+        });
     }
 }
 exports.UserRoutes = UserRoutes;

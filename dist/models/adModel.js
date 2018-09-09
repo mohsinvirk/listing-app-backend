@@ -42,6 +42,9 @@ exports.AdSchema = new Schema({
     favorite: {
         type: Boolean
     },
+    fEmail: {
+        type: String
+    },
     file: {
         type: String
     },

@@ -26,14 +26,14 @@ export class UserRoutes {
         });
       });
 
-    // POST endpoint
-
-    // Ad detail
-    // app
-    //   .route("/ads/:adId")
-    //   // get specific Ad
-    //   .get(this.userController.getAdWithID)
-    //   .put(this.userController.updateAd)
-    //   .delete(this.userController.deleteAd);
+    // POST endpoint of token
+    app
+      .route("/settoken")
+      .post(this.userController.setToken)
+      .get((req: Request, res: Response) => {
+        res.status(200).send({
+          message: "GET request successfulll!!!!"
+        });
+      });
   }
 }

@@ -47,12 +47,20 @@ export class userController {
   public loginUser(req: Request, res: Response) {
     const email = req.body.email;
     const password = req.body.password;
+    const token = req.body.token;
     // Find user in db
     User.findOne({ email }).then(user => {
       // If User exists
       if (!user) {
         return res.json({ email: "user not found" });
       }
+      if (user && !user.token) {
+        user.token = req.body.token;
+        user.save((err, user) => {
+          if (err) res.json(err);
+        });
+      }
+
       // Compare the hashed user.password with password
       bcrypt.compare(password, user.password).then(isMatch => {
         // If password Match successful
@@ -80,6 +88,26 @@ export class userController {
           return res.status(404).json({ error: "Not found" });
         }
       });
+    });
+  }
+
+  public setToken(req: Request, res: Response) {
+    const email = req.body.email;
+    // Find user in db
+    User.findOne({ email }).then(user => {
+      // If User exists
+      if (!user) {
+        return res.json({ email: "user not found" });
+      }
+      if (user) {
+        user.token = req.body.token;
+        user.save((err, user) => {
+          if (err) {
+            console.log(err);
+          }
+          res.json({ message: "Token Update successful" });
+        });
+      }
     });
   }
 }

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const adController_1 = require("../controllers/adController");
+const messageController_1 = require("../controllers/messageController");
 const multer = require("multer");
 const path = require("path");
 // multer configuration
@@ -18,6 +19,7 @@ var upload = multer({
 class Routes {
     constructor() {
         this.adController = new adController_1.adController();
+        this.messageController = new messageController_1.messageController();
     }
     routes(app) {
         app.route("/").get((req, res) => {
@@ -52,6 +54,14 @@ class Routes {
             .get(this.adController.getAdWithID)
             .put(this.adController.updateAd)
             .delete(this.adController.deleteAd);
+        app
+            .route("/message")
+            .post(this.messageController.addNewMessage)
+            .get((req, res) => {
+            res.send({
+                message: "API is Working "
+            });
+        });
     }
 }
 exports.Routes = Routes;

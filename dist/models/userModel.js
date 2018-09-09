@@ -12,6 +12,9 @@ exports.UserSchema = new Schema({
         type: String,
         required: "Select a category"
     },
+    fcmtoken: {
+        type: String
+    },
     password: {
         type: String,
         required: "Enter price"
