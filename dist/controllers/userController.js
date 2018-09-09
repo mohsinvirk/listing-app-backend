@@ -52,13 +52,6 @@ class userController {
             if (!user) {
                 return res.json({ email: "user not found" });
             }
-            if (user && !user.token) {
-                user.token = req.body.token;
-                user.save((err, user) => {
-                    if (err)
-                        res.json(err);
-                });
-            }
             // Compare the hashed user.password with password
             bcrypt.compare(password, user.password).then(isMatch => {
                 // If password Match successful
@@ -93,7 +86,7 @@ class userController {
                 return res.json({ email: "user not found" });
             }
             if (user) {
-                user.token = req.body.token;
+                user.fcmtoken = req.body.fcmtoken;
                 user.save((err, user) => {
                     if (err) {
                         console.log(err);

@@ -7,24 +7,23 @@ const FCM = require("fcm-node");
 let serverKey = "AAAAgJzBXCY:APA91bEQjf7-125W_aG50XUOpVmiahpjSuEqQkhFuSmKexA8yMFiNNdhSICVsZyvlGI_wqOWCNC4tlYKCZQbtfdKszjjNnA0Yq5RRmXj4QBS4YiNoT2IH3mtoyDjm9rCygEhIbX4ZyoL";
 // import { error } from "util";
 const Message = mongoose.model("Message", messageModel_1.messageSchema);
-const User = mongoose.model("User", userModel_1.UserSchema);
+const User = mongoose.model("User", userModel_1.UserSchema, "user");
 class messageController {
     /**
      * addNewImage
      */
     addNewMessage(req, res) {
         let body = req.body;
-        User.findOne({ email: req.body.adAuthor }, (user, err) => {
-            if (err)
-                res.json(err);
+        let email = req.body.adAuthor;
+        User.findOne({ email })
+            .then(user => {
             var fcm = new FCM(serverKey);
-            let token = user.fcmtoken;
             let message = {
                 //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-                to: `${token}`,
+                to: `${user.fcmtoken}`,
                 collapse_key: "your_collapse_key",
                 notification: {
-                    title: `Hi ${body.senderName}`,
+                    title: `Hi ${user.name}`,
                     body: body.senderMessage
                 },
                 data: {
@@ -42,19 +41,24 @@ class messageController {
                     console.log("Successfully sent with response: ", response);
                 }
             });
-            let newMessage = new Message({
-                senderName: body.senderName,
-                senderEmail: body.senderEmail,
-                senderMessage: body.senderMessage
-            });
-            newMessage
-                .save()
-                .then(result => {
-                res.json(result);
-            })
-                .catch(err => {
-                res.json(err);
-            });
+            console.log("User", user);
+        })
+            .catch(err => {
+            if (err)
+                res.send(err);
+        });
+        let newMessage = new Message({
+            senderName: body.senderName,
+            senderEmail: body.senderEmail,
+            senderMessage: body.senderMessage
+        });
+        newMessage
+            .save()
+            .then(result => {
+            console.log(result);
+        })
+            .catch(err => {
+            res.json(err);
         });
     }
 }
